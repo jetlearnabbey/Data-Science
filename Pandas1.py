@@ -1,7 +1,6 @@
-
 import pandas as pd
 
-#pandas series 
+'''#pandas series 
 list1 = [1,2,3,4]
 s1 = pd.Series(list1,index = ["a","b","c","d"])
 
@@ -25,14 +24,33 @@ print(df.loc[[0,1]])
 #diabetes data set
 
 
-df = pd.read_csv("diabetes.csv")
 print(df.head(10))
 print(df.tail(5))
-print(df.info())
-print(df.describe())
+print(df.info()
+print(df.describe()
+
+#11/04/25
+
+#finding the mean value 
 
 
+df = pd.read_csv("diabetes.csv")
+mean = df["Glucose"].mean()
+print(mean)
 
+null = df.isnull().sum()
+print(null)
+
+df.dropna(inplace=True,axis=1)
+df.fillna(mean)
+
+#removing the duplicates
+
+df.drop_duplicates()
+
+#renaming the column
+df.rename(columns = {"DiabetesPedigreeFunction":"DPF"},inplace=True)
+print(df.head())
 
 
 
@@ -70,7 +88,45 @@ print(df.isnull().sum())
 
 #dropping null values/dropping the rows
 
-df.dropna()
+df.dropna()'''
+
+#11/4/25
+
+
+#finding the mean value 
+
+
+df = pd.read_csv("diabetes.csv")
+mean = df["Glucose"].mean()
+print(mean)
+
+null = df.isnull().sum()
+print(null)
+
+df.dropna(inplace=True,axis=1)
+df.fillna(mean)
+
+#removing the duplicates
+
+df.drop_duplicates()
+
+#renaming the column
+df.rename(columns = {"DiabetesPedigreeFunction":"DPF"},inplace=True)
+
+#renaming all the asigning column names 
+
+#df.columns = []
+
+
+#create a new column if both are needed to make something
+
+df["GI_RATIO"]= df["Glucose"]-df["Insulin"]
+print(df.head())
+
+#unique values
+
+print(df["Outcome"].value_counts(normalize=True))
+
 
 
 
