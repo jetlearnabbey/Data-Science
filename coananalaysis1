@@ -1,0 +1,51 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import plotly 
+import plotly.express as px
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
+
+dataset = pd.read_csv('covid_data.csv')
+
+
+
+dataset = dataset[['Province_State','Country_Region','Confirmed','Recovered','Deaths','Active']]
+dataset.columns= ('State','Country','Confirmed','Recovered','Deaths','Active')
+
+
+dataset['Deaths']=dataset['Deaths'].fillna(value='')
+print(dataset.isnull().sum())
+
+#Top 10 most effected countires(Deaths)
+
+topcs = pd.DataFrame(dataset.groupby('Country')['Deaths'].sum().sort_values(ascending=False).head(10))
+print(topcs)
+fig1 = px.scatter(topcs,x=topcs.index,y='Deaths',size='Deaths',size_max=120,color=topcs.index,title='Top 10 Most Countries with Covid Deaths')
+fig1.write_html('fig1.html',auto_open=True)
+
+#Top most states confirmed USA
+topstates = dataset["Country"]=="US"
+print(topstates)
+topstates=dataset[topstates].nlargest(5,"Confirmed")
+
+#Confirmed Cases in Japan
+topjapan = dataset["Country"]=="Japan"
+print(topjapan)
+topjapan = dataset[topjapan].nlargest(5,"Confirmed")
+
+#Confirmed Cases in France
+
+topfrance = dataset["Country"]=="France"
+print(topfrance)
+topfrance = dataset[topfrance].nlargest(5,"Confirmed")
+
+fig4 = go.Figure(data=[go.Bar(name="Confirmed Cases", x=topstates["Confirmed"], y=topstates["State"], orientation="h"), go.Bar(name="Confirmed Cases", x=topjapan["Confirmed"], y=topjapan["State"], orientation="h"),
+    go.Bar(name="Confirmed Cases", x=topfrance["Confirmed"], y=topfrance["State"], orientation="h")])
+fig4.write_html('fig4.html',auto_open=True)
+
+
+fig5 = go.Figure(data=[go.Bar(name="Deaths", x=topfrance["Confirmed"], y=topfrance["State"], orientation="h"), go.Bar(name="Confirmed Cases", x=topfrance["Confirmed"], y=topfrance["State"], orientation="h"),
+    go.Bar(name="Recovered", x=topfrance["Recovered"], y=topfrance["State"], orientation="h")])
+fig5.write_html('fig5.html',auto_open=True)
